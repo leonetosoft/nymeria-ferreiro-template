@@ -1,0 +1,129 @@
+{{#each this.tableData as |table index|}}
+#begin_file
+{{fileName (replace this.tablename '_' '-') '/' (replace this.tablename '_' '-') '-list' '/' (replace this.tablename '_' '-') '-listar.component.ts'}}
+{{set 'nome' (camelcase this.tablename true)}}
+{{set 'replaced' (replace this.tablename '_' '-')}}
+import { Component, OnInit, ViewChild } from '@angular/core';{{#if (useModal this.tablename)}}
+import { Subscription } from 'rxjs';{{/if}}
+import { LazyLoadEvent, ConfirmationService } from 'primeng/primeng';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AlertService } from 'src/app/services/alerts/alert.service';{{#if (useModal this.tablename)}}
+import { EventPubSubService } from 'src/app/services/events/events.pub.sub.service';{{/if}}
+import { Filtrar{{get 'nome'}}GQL, CriarAlterar{{get 'nome'}}GQL } from 'src/app/generated/graphql';
+{{#each (filters table.tablename)}}
+{{#if (isTemplate this.field this.label (datatype this.fieldData.type) 'imports')}}
+{{getInput this.field this.label (datatype this.fieldData.type) 'imports'}}
+{{/if}}
+{{/each}}
+
+@Component({
+  selector: 'app-{{get 'replaced'}}-listar',
+  templateUrl: './{{get 'replaced'}}-listar.component.html',
+  styleUrls: ['./{{get 'replaced'}}-listar.component.css'],
+  providers: [ConfirmationService]
+})
+export class {{get 'nome'}}ListarComponent implements OnInit {
+  public filterForm: FormGroup
+
+  {{#each (filters table.tablename)}}
+  {{#if (isTemplate this.field this.label (datatype this.fieldData.type) 'comp-init')}}
+  {{getInput this.field this.label (datatype this.fieldData.type) 'comp-init'}}
+  {{/if}}
+  {{/each}}
+
+  public columns: any
+  public dados: any[]
+  public totalDados: number = 0
+  @ViewChild('dt', { static: true })
+  private dt: any
+  {{#if (useModal this.tablename)}}
+  private eventsSubs: Subscription
+  {{/if}}
+  public lastLazy: LazyLoadEvent
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private confirmationService: ConfirmationService,
+    private alertService: AlertService,{{#if (useModal this.tablename)}}
+    private eventPs: EventPubSubService,{{/if}}
+    {{#each (filters table.tablename)}}
+    {{#if (isTemplate this.field this.label (datatype this.fieldData.type) 'comp-constructor')}}
+    {{getInput this.field this.label (datatype this.fieldData.type) 'comp-constructor'}},
+    {{/if}}
+    {{/each}}
+    private filtrar: Filtrar{{get 'nome'}}GQL,
+    private criarAlterar: CriarAlterar{{get 'nome'}}GQL
+  ) {
+    this.filterForm = this.formBuilder.group({
+      {{#each (filters table.tablename)}}
+      {{this.field}}: [undefined],
+      {{/each}}
+    })
+  }
+
+  ngOnInit() {
+    this.buildColumns()
+    this.filterForm.valueChanges.subscribe((value) => {
+      {{#each (filters table.tablename)}}
+      this.dt.filter(value.{{this.field}}, '{{this.field}}', '{{this.matchMode}}')
+      {{/each}}
+    })
+    {{#if (useModal this.tablename)}}
+    this.eventsSubs = this.eventPs.eventData.subscribe(rs => {
+      if (rs !== 'ATUALIZA_{{upper this.tablename}}') return;
+      this.load()
+    })
+    {{/if}}
+  }
+
+  public buildColumns() {
+    this.columns = [
+      {{#each (listIt table.tablename)}}
+      { field: '{{this.field}}', header: '{{this.header}}', {{#if (exists this.width)}}w: '{{this.width}}',{{/if}} {{#if (exists this.center)}}center: '{{this.center}}'{{/if}} },
+      {{/each}}
+      { field: 'acao', header: '', w: '80' }
+    ];
+  }
+
+  public load(event: any = this.lastLazy) {
+    this.lastLazy = event
+    this.filtrar.fetch({ filter: event }).subscribe(rs => {
+      this.dados = rs.data.filtrar{{get 'nome'}}.rows;
+      this.totalDados = rs.data.filtrar{{get 'nome'}}.count;
+    }, err => {
+      this.alertService.GQLError(err);
+    });
+  }
+
+  public editar(id) {
+    this.router.navigate(['./editar', id], {
+      relativeTo: this.route
+    });
+  }
+
+  public excluir(id) {
+    this.confirmationService.confirm({
+      message: 'Excluir registro?',
+      header: "Confirmar exclusão",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Sim",
+      rejectLabel: "Não",
+      accept: () => {
+        this.criarAlterar.mutate({
+          data: {
+            id: id,
+            ativo: 'N'
+          }
+        }).subscribe(rs => {
+          this.load()
+        }, err => {
+          this.alertService.GQLError(err);
+        })
+      }
+    });
+  }
+}
+{{/each}}

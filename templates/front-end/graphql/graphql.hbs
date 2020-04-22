@@ -1,0 +1,28 @@
+{{#each this.tableData as |table index|}}
+#begin_file
+{{fileName '' (lower this.tablename) '.gql'}}
+{{set 'nome' (camelcase this.tablename true)}}
+query filtrar{{get 'nome'}}($filter: {{get 'nome'}}ListInput!) {
+	filtrar{{get 'nome'}}(filter: $filter) {
+		count, rows {
+			{{#each (listIt table.tablename)}}
+            {{this.field}}
+            {{/each}}
+		}
+	}
+}
+
+mutation criarAlterar{{get 'nome'}}($data: {{get 'nome'}}Input!){
+  criarAlterar{{get 'nome'}}(data: $data) {
+    id
+  }
+}
+
+query buscar{{get 'nome'}}PorId($id: Int!) {
+	buscar{{get 'nome'}}PorId(id: $id) {
+    {{#each table.fields}}
+    {{this.name}}
+    {{/each}}
+  }
+}
+{{/each}}

@@ -1,0 +1,114 @@
+{
+    "imports": {
+        "sequelize-typescript": [
+            "Table",
+            "Model",
+            "PrimaryKey",
+            "Column",
+            "DataType",
+            "AutoIncrement",
+            "Default",
+            "Comment",
+            "ForeignKey",
+            "BelongsTo"
+        ],
+        "../util/primeng/CrudUtils": [
+            "CrudUtils"
+        ],
+        "sequelize": [
+            "Op",
+            "Transaction"
+        ],
+        "../security/token": [
+            "SessionToken"
+        ],
+        "../config/env": [
+            "Env"
+        ],
+        "../util/primeng/DataTable": [
+            "IPrimeDataTableRequest",
+            "PrimeDataTableResponse",
+            "PrimeDataTableRequest",
+            "PrimeFilterItemString",
+            "PrimeFilterItemInt"
+        ],
+        "type-graphql": [
+            "ObjectType",
+            "Field",
+            "Int",
+            "Resolver",
+            "Query",
+            "Arg",
+            "Ctx",
+            "Mutation",
+            "Authorized",
+            "UseMiddleware",
+            "InputType"
+        ],
+        "../util/permissoes/perm.enum": [
+            "PERM"
+        ],
+        "../middleware/valida.perm.middle": [
+            "CheckPerm",
+            "BuildPerm"
+        ],
+        "../util/context.interface": [
+            "ContextInterface"
+        ],
+        "typedi": [
+            "Service"
+        ]
+    },
+    "data": {
+        "paciente": {
+            "filterBy": ["nome", "id", "cidade_id"],
+            "filters": [{
+                "field": "id",
+                "label": "Código",
+                "matchMode": "gt"
+            }, {
+                "field": "cidade_id",
+                "label": "Cidade",
+                "matchMode": "gt"
+            }],
+            "list": [{
+                "field": "id",
+                "header": "Código",
+                "center": false,
+                "width": 100
+            },{
+                "field": "nome",
+                "header": "Nome do Paciente",
+                "center": false,
+                "width": 100
+            },{
+                "field": "data_nascimento",
+                "header": "Nascimento",
+                "center": false,
+                "width": 100
+            }]
+        },
+        "profissional": {
+            "modal": true,
+            "filterBy": ["nome", "id"],
+            "filters": [{
+                "field": "id",
+                "label": "Código",
+                "matchMode": "gt"
+            }],
+            "list": [{
+                "field": "id",
+                "header": "Código",
+                "pipe": "",
+                "center": false,
+                "width": 100
+            },{
+                "field": "nome",
+                "header": "Nome do Profissional",
+                "pipe": "",
+                "center": false,
+                "width": 100
+            }]
+        }
+    }
+}

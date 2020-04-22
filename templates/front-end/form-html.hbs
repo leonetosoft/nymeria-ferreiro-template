@@ -1,0 +1,43 @@
+{{#each this.tableData as |table index|}}
+#begin_file
+{{fileName (replace this.tablename '_' '-') '/' (replace this.tablename '_' '-') '-form' '/' (replace this.tablename '_' '-') '-form.component.html'}}
+<form [formGroup]="formGroup" (keydown.enter)="$event.preventDefault()" (ngSubmit)="submit()">
+    {{#if (useModal this.tablename)}}
+    <p-dialog positionTop="45" [maximizable]="true" [dismissableMask]="true" [resizable]="false" [draggable]="false"
+        (onHide)="close()" [(visible)]="display" modal="modal" [contentStyle]="{'overflow':'visible'}"
+        [style]="{'width': '700px'}" [responsive]="true">
+    <p-header *ngIf="!editing">
+      Criar Banco
+    </p-header>
+    <p-header *ngIf="editing">
+      Editar Banco
+    </p-header>
+    {{/if}}
+    <div class="ui-g ui-fluid no-pad">
+        {{#each this.fields}}
+        <div class="ui-g-6 ui-md-6 ui-sm-12">
+            {{getInput this.name (camelcase this.name) (datatype this.type) 'html'}}
+        </div>
+        {{/each}}
+    </div>
+    {{#if (useModal this.tablename)}}
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <button type="button" pButton icon="pi pi-times" (click)="display = false" label="Cancelar"></button>
+        <button type="submit" pButton icon="pi pi-check" label="Salvar"></button>
+      </div>
+    </p-footer>
+
+  </p-dialog>{{/if}}
+  {{#if (negate (useModal this.tablename))}}
+  <div class="ui-g ui-fluid no-pad" class="footer">
+		<div>
+			<button pButton label='Voltar' icon="pi pi-arrow-left" (click)="back()"></button>
+		</div>
+		<div>
+			<button type="submit" icon="pi pi-save" pButton label='Salvar'></button>
+		</div>
+  </div>
+  {{/if}}
+</form>
+{{/each}}

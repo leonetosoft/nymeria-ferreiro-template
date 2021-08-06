@@ -43,7 +43,8 @@
             "Mutation",
             "Authorized",
             "UseMiddleware",
-            "InputType"
+            "InputType",
+            "Float"
         ],
         "../util/permissoes/perm.enum": [
             "PERM"
@@ -60,55 +61,571 @@
         ]
     },
     "data": {
-        "paciente": {
-            "filterBy": ["nome", "id", "cidade_id"],
-            "filters": [{
-                "field": "id",
-                "label": "Código",
-                "matchMode": "gt"
-            }, {
-                "field": "cidade_id",
-                "label": "Cidade",
-                "matchMode": "gt"
-            }],
-            "list": [{
-                "field": "id",
-                "header": "Código",
-                "center": false,
-                "width": 100
-            },{
-                "field": "nome",
-                "header": "Nome do Paciente",
-                "center": false,
-                "width": 100
-            },{
-                "field": "data_nascimento",
-                "header": "Nascimento",
-                "center": false,
-                "width": 100
-            }]
+        "calendario_leilao": {
+            "modal": false,
+            "filterBy": [
+                "data",
+                "leilao_id"
+            ],
+            "filters": [
+                {
+                    "field": "data",
+                    "label": "Data do Leilão",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "leilao_id",
+                    "label": "Leilão",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "data",
+                    "header": "Data",
+                    "center": false,
+                    "width": 100,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                },
+                {
+                    "field": "horario",
+                    "header": "Horário",
+                    "center": false,
+                    "width": 100,
+                    "pipe": "datex: 'HH:MM'"
+                },
+                {
+                    "field": "leilao_id",
+                    "header": "Leilão",
+                    "center": false,
+                    "width": 100
+                }
+            ]
         },
-        "profissional": {
-            "modal": true,
-            "filterBy": ["nome", "id"],
-            "filters": [{
-                "field": "id",
-                "label": "Código",
-                "matchMode": "gt"
-            }],
-            "list": [{
-                "field": "id",
-                "header": "Código",
-                "pipe": "",
-                "center": false,
-                "width": 100
-            },{
-                "field": "nome",
-                "header": "Nome do Profissional",
-                "pipe": "",
-                "center": false,
-                "width": 100
-            }]
+        "tutorial": {
+            "modal": false,
+            "filterBy": [
+                "titulo",
+                "ativo",
+                "categoria_tutorial_id"
+            ],
+            "filters": [
+                {
+                    "field": "titulo",
+                    "label": "Titulo",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "titulo",
+                    "header": "Titulo",
+                    "center": false
+                },
+                {
+                    "field": "imagem_capa",
+                    "header": "Capa",
+                    "center": false,
+                    "width": 100
+                },
+                {
+                    "field": "data_criacao",
+                    "header": "Data",
+                    "center": true,
+                    "width": 100
+                }
+            ]
+        },
+        "tipo_parceiro": {
+            "modal": false,
+            "filterBy": [
+                "descricao",
+                "ativo"
+            ],
+            "filters": [
+                {
+                    "field": "descricao",
+                    "label": "Descrição",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "descricao",
+                    "header": "Descrição",
+                    "center": false
+                }
+            ]
+        },
+        "categoria_tutorial": {
+            "modal": false,
+            "filterBy": [
+                "descricao",
+                "ativo"
+            ],
+            "filters": [
+                {
+                    "field": "descricao",
+                    "label": "Descrição",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "descricao",
+                    "header": "Descrição",
+                    "center": false
+                }
+            ]
+        },
+        "solicitacao_peca": {
+            "modal": false,
+            "filterBy": [
+                "veiculo",
+                "descricao_peca",
+                "usuario_id",
+                "data_criacao"
+            ],
+            "filters": [
+                {
+                    "field": "veiculo",
+                    "label": "Veículo",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "descricao_peca",
+                    "label": "Peça",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "usuario_id",
+                    "label": "Usuário",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "data_criacao",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "veiculo",
+                    "header": "Veículo",
+                    "center": false
+                },
+                {
+                    "field": "descricao_peca",
+                    "header": "Peça",
+                    "center": false
+                },
+                {
+                    "field": "usuario_id",
+                    "header": "Usuário",
+                    "center": false
+                },
+                {
+                    "field": "data_criacao",
+                    "header": "Data de Criação",
+                    "center": false
+                }
+            ]
+        },
+        "parceiro": {
+            "modal": false,
+            "filterBy": [
+                "descricao",
+                "tipo_parceiro_id",
+                "ativo"
+            ],
+            "filters": [
+                {
+                    "field": "descricao",
+                    "label": "Descrição",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "tipo_parceiro_id",
+                    "label": "Tipo",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "descricao",
+                    "header": "Descrição",
+                    "center": false
+                },
+                {
+                    "field": "logo",
+                    "header": "Logo",
+                    "center": false
+                },
+                {
+                    "field": "cidade_id",
+                    "header": "Cidade",
+                    "center": false
+                },
+                {
+                    "field": "endereco",
+                    "header": "Endereco",
+                    "center": false
+                },
+                {
+                    "field": "telefone",
+                    "header": "Telefone",
+                    "center": false
+                },
+                {
+                    "field": "tipo_parceiro_id",
+                    "header": "Tipo",
+                    "center": false
+                },
+                {
+                    "field": "ativo",
+                    "header": "Ativo",
+                    "center": false
+                }
+            ]
+        },
+        "leilao": {
+            "modal": false,
+            "filterBy": [
+                "descricao",
+                "ativo"
+            ],
+            "filters": [
+                {
+                    "field": "descricao",
+                    "label": "Descrição",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "descricao",
+                    "header": "Descrição",
+                    "center": false
+                },
+                {
+                    "field": "data_cadastro",
+                    "header": "Cadastro",
+                    "center": true,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                },
+                {
+                    "field": "ativo",
+                    "header": "Ativo",
+                    "center": true
+                }
+            ]
+        },
+        "cliente": {
+            "modal": false,
+            "filterBy": [
+                "nome",
+                "data_nascimento",
+                "data_cadastro",
+                "cpf",
+                "email",
+                "endereco",
+                "data_consultoria",
+                "cidade_id",
+                "ativo"
+            ],
+            "filters": [
+                {
+                    "field": "nome",
+                    "label": "Nome",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "data_nascimento",
+                    "label": "Dada de Nascimento",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "data_cadastro",
+                    "label": "Cadastro",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "cpf",
+                    "label": "CPF",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "email",
+                    "label": "Email",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "endereco",
+                    "label": "Endereco",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "data_consultoria",
+                    "label": "Consultaria",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "cidade_id",
+                    "label": "Cidade",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "nome",
+                    "header": "Nome",
+                    "center": false
+                },
+                {
+                    "field": "data_nascimento",
+                    "header": "Nascimento",
+                    "center": true,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                },
+                {
+                    "field": "cpf",
+                    "header": "CPF",
+                    "center": true
+                },
+                {
+                    "field": "email",
+                    "header": "Email",
+                    "center": true
+                },
+                {
+                    "field": "instagram",
+                    "header": "Instagram",
+                    "center": true
+                },
+                {
+                    "field": "endereco",
+                    "header": "Endereco",
+                    "center": true
+                },
+                {
+                    "field": "data_consultoria",
+                    "header": "Consultaria",
+                    "center": true,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                },
+                {
+                    "field": "data_cadastro",
+                    "header": "Cadastro",
+                    "center": true,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                },
+                {
+                    "field": "data_aprovacao",
+                    "header": "Dada da Aprovação",
+                    "center": true,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                },
+                {
+                    "field": "cidade_id",
+                    "header": "Cida",
+                    "center": true
+                },
+                {
+                    "field": "ativo",
+                    "header": "Ativo",
+                    "center": true
+                }
+            ]
+        },
+        "avaliacao": {
+            "modal": false,
+            "filterBy": [
+                "lote",
+                "leilao_id",
+                "veiculo",
+                "cliente_id",
+                "data_cadastro",
+                "status",
+                "data_avaliacao",
+                "data_arremate"
+            ],
+            "filters": [
+                {
+                    "field": "lote",
+                    "label": "Lote",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "leilao_id",
+                    "label": "Leilão",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "veiculo",
+                    "label": "Veículo",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "data_cadastro",
+                    "label": "Data",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "status",
+                    "label": "Status",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "data_arremate",
+                    "label": "Data de Avaliação",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "id",
+                    "header": "Cód.",
+                    "center": false
+                },
+                {
+                    "field": "leilao_id",
+                    "header": "Leilão",
+                    "center": false
+                },
+                {
+                    "field": "veiculo",
+                    "header": "Veículo",
+                    "center": false
+                },
+                {
+                    "field": "lote",
+                    "header": "Lote",
+                    "center": false
+                },
+                {
+                    "field": "monta",
+                    "header": "Monta",
+                    "center": false
+                },
+                {
+                    "field": "valor_fipe",
+                    "header": "Vlr. Fipe",
+                    "center": false,
+                    "pipe": "brl: ''"
+                },
+                {
+                    "field": "valor_dsal",
+                    "header": "Vlr. Dsal",
+                    "center": false,
+                    "pipe": "brl: ''"
+                },
+                {
+                    "field": "valor_dsal",
+                    "header": "Vlr. Dsal",
+                    "center": false,
+                    "pipe": "brl: ''"
+                },
+                {
+                    "field": "valor_transporte",
+                    "header": "Vlr. Transp.",
+                    "center": false,
+                    "pipe": "brl: ''"
+                },
+                {
+                    "field": "valor_documentacao",
+                    "header": "Vlr. Docum.",
+                    "center": false,
+                    "pipe": "brl: ''"
+                },
+                {
+                    "field": "valor_reparos",
+                    "header": "Vlr. Rep.",
+                    "center": false,
+                    "pipe": "brl: ''"
+                },
+                {
+                    "field": "valor_venda",
+                    "header": "Vlr. Vend.",
+                    "center": false,
+                    "pipe": "brl: ''"
+                },
+                {
+                    "field": "valor_lance_indicado",
+                    "header": "Vlr. Lanc. Indic.",
+                    "center": false,
+                    "pipe": "brl: ''"
+                },
+                {
+                    "field": "cliente_id",
+                    "header": "Cliente",
+                    "center": false
+                },
+                {
+                    "field": "data_cadastro",
+                    "header": "Cadastro",
+                    "center": false,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                },
+                {
+                    "field": "data_arremate",
+                    "header": "Arremate",
+                    "center": false,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                },
+                {
+                    "field": "valor_arremate",
+                    "header": "Valor Arrem.",
+                    "center": false,
+                    "pipe": "brl: ''"
+                },
+                {
+                    "field": "status",
+                    "header": "Status",
+                    "center": false,
+                    "pipe": ""
+                },
+                {
+                    "field": "data_avaliacao",
+                    "header": "Dta. Valiaç.",
+                    "center": false,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                },
+                {
+                    "field": "criacao_usuario_id",
+                    "header": "Cadastro",
+                    "center": false
+                }
+            ]
         }
     }
 }

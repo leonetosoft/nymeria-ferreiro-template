@@ -30,14 +30,7 @@
 
   </p-dialog>{{/if}}
   {{#if (negate (useModal this.tablename))}}
-  <div class="ui-g ui-fluid no-pad" class="footer">
-		<div>
-			<button pButton label='Voltar' icon="pi pi-arrow-left" (click)="back()"></button>
-		</div>
-		<div>
-			<button type="submit" icon="pi pi-save" pButton label='Salvar'></button>
-		</div>
-  </div>
+  <app-form-footer [salvando]="salvando" (backEvent)="close()"></app-form-footer>
   {{/if}}
 </form>
 {{/each}}

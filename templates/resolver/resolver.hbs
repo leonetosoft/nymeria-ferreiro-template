@@ -10,19 +10,19 @@ import { {{get 'nome'}}Service } from "../services/{{get 'nome'}}Service";
 export default class {{get 'nome'}}Resolver {
   {{set 'service' (camelcase this.tablename) 'Service'}}
   constructor(private {{get 'service'}}: {{get 'nome'}}Service) { }
-
+  {{#if (containsFilter table.tablename)}}
   @{{import 'Authorized'}}()
   @{{import 'UseMiddleware'}}({{import 'CheckPerm'}}([{{import 'PERM'}}.{{get 'nome'}}.Visualizar]))
   @{{import 'Query'}}(returns => {{get 'nome'}}DataTable, { nullable: true })
-  async filtrar{{get 'nome'}}(@Arg('filter') filter: {{get 'nome'}}ListInput): Promise<{{get 'nome'}}DataTable> {
-    return this.{{get 'service'}}.filtrar(filter)
+  async filtrar{{get 'nome'}}(@Arg('filter') filter: {{get 'nome'}}ListInput, @Ctx() ctx: ContextInterface): Promise<{{get 'nome'}}DataTable> {
+    return this.{{get 'service'}}.filtrar(filter, ctx.usuario)
   }
-
+  {{/if}}
   @Authorized()
   @UseMiddleware(CheckPerm([PERM.{{get 'nome'}}.Visualizar]))
   @Query(returns => {{get 'nome'}}, { nullable: true })
-  buscar{{get 'nome'}}PorId(@Arg('id', type => Int) id: number): {{get 'nome'}} {
-    return this.{{get 'service'}}.porId(id)
+  buscar{{get 'nome'}}PorId(@Arg('id', type => Int) id: number, @Ctx() ctx: ContextInterface): {{get 'nome'}} {
+    return this.{{get 'service'}}.porId(id, ctx.usuario)
   }
 
   @Authorized()
@@ -33,7 +33,7 @@ export default class {{get 'nome'}}Resolver {
   })]))
   @{{import 'Mutation'}}(returns => {{get 'nome'}}, { nullable: true })
   criarAlterar{{get 'nome'}}(@Arg('data') data: {{get 'nome'}}Input, @Ctx() ctx: ContextInterface) {
-    return this.{{get 'service'}}.criarAlterar{{get 'nome'}}(data, ctx.usuario)
+    return this.{{get 'service'}}.criarAlterar(data, ctx.usuario)
   }
 }
 {{/each}}

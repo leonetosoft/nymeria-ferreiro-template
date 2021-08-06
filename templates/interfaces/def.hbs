@@ -3,7 +3,7 @@
 {{fileName '' (camelcase this.tablename true) 'Def.ts'}}
 {{set 'nome' (camelcase this.tablename true)}}
 import {{get 'nome'}} from '../models/{{get 'nome'}}';
-
+{{#if (containsFilter table.tablename)}}
 @{{import 'InputType'}}("{{get 'nome'}}FilterInput")
 export class {{get 'nome'}}FilterInput {
  {{#each table.fields}}
@@ -17,6 +17,7 @@ export class {{get 'nome'}}FilterInput {
 
 @{{import 'InputType'}}("{{get 'nome'}}ListInput")
 export class {{get 'nome'}}ListInput extends {{import 'PrimeDataTableRequest'}}({{get 'nome'}}FilterInput) implements {{import 'IPrimeDataTableRequest'}}<{{get 'nome'}}FilterInput> { }
+{{/if}}
 
 @{{import 'ObjectType'}}("{{get 'nome'}}DataTable")
 export class {{get 'nome'}}DataTable extends {{import 'PrimeDataTableResponse'}}({{get 'nome'}}) { }
@@ -24,7 +25,7 @@ export class {{get 'nome'}}DataTable extends {{import 'PrimeDataTableResponse'}}
 @{{import 'InputType'}}("{{get 'nome'}}Input")
 export class {{get 'nome'}}Input {
  {{#each table.fields}}
-    @{{import 'Field'}}({{#if (isGqlType this.type)}}type => {{import (gqlType this.type)}}, {{/if}}{ nullable: {{this.allowNull}} })
+    @{{import 'Field'}}({{#if (isGqlType this.type)}}type => {{import (gqlType this.type)}}, {{/if}}{ nullable: true })
     {{this.name}}: {{memberDef (datatype this.type)}};
 
  {{/each}}

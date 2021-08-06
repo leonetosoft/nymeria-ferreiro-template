@@ -3,12 +3,13 @@
 {{fileName (replace this.tablename '_' '-') '/' (replace this.tablename '_' '-') '-form' '/' (replace this.tablename '_' '-') '-form.component.ts'}}
 {{set 'nome' (camelcase this.tablename true)}}
 {{set 'replaced' (replace this.tablename '_' '-')}}
+import { finalize } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { TipoMsg, AlertService } from 'src/app/services/alerts/alert.service';
+import { AlertService, TipoMsg } from 'src/app/services/util/alert.service';
 import { Buscar{{get 'nome'}}PorIdGQL, CriarAlterar{{get 'nome'}}GQL } from 'src/app/generated/graphql';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { FormService } from 'src/app/services/form.service';
+import { FormService } from 'src/app/services/util/form.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';{{#if (useModal this.tablename)}}
 import { EventPubSubService } from 'src/app/services/events/events.pub.sub.service';{{/if}}
 {{#each this.fields}}
@@ -29,6 +30,7 @@ export class {{get 'nome'}}FormComponent implements OnInit {
   {{/if}}
   editing = false
   id: number
+  salvando = false;
 
   {{#each this.fields}}
   {{#if (isTemplate this.name (camelcase this.name) (datatype this.type) 'comp-init')}}
@@ -86,9 +88,12 @@ export class {{get 'nome'}}FormComponent implements OnInit {
 
     if (this.formGroup.valid) {
       if (values.isChanged) {
+        this.salvando = true;
         this.criarAlterar.mutate({
           data: { ...values.changes, ...this.formService.parseBoolToStr(values.changes) }
-        }).subscribe(rs => {
+        }).pipe(finalize(() => {
+          this.salvando = false;
+        })).subscribe(rs => {
           this.close();
           this.formService.markPristine(this.formGroup);
           this.alertService.SuccessUpdate();

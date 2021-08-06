@@ -5,10 +5,10 @@
 {{set 'replaced' (replace this.tablename '_' '-')}}
 import { Component, OnInit, ViewChild } from '@angular/core';{{#if (useModal this.tablename)}}
 import { Subscription } from 'rxjs';{{/if}}
-import { LazyLoadEvent, ConfirmationService } from 'primeng/primeng';
+import { LazyLoadEvent, ConfirmationService } from 'primeng';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AlertService } from 'src/app/services/alerts/alert.service';{{#if (useModal this.tablename)}}
+import { AlertService } from 'src/app/services/util/alert.service';{{#if (useModal this.tablename)}}
 import { EventPubSubService } from 'src/app/services/events/events.pub.sub.service';{{/if}}
 import { Filtrar{{get 'nome'}}GQL, CriarAlterar{{get 'nome'}}GQL } from 'src/app/generated/graphql';
 {{#each (filters table.tablename)}}
@@ -21,10 +21,10 @@ import { Filtrar{{get 'nome'}}GQL, CriarAlterar{{get 'nome'}}GQL } from 'src/app
   selector: 'app-{{get 'replaced'}}-listar',
   templateUrl: './{{get 'replaced'}}-listar.component.html',
   styleUrls: ['./{{get 'replaced'}}-listar.component.css'],
-  providers: [ConfirmationService]
+  providers: []
 })
 export class {{get 'nome'}}ListarComponent implements OnInit {
-  public filterForm: FormGroup
+  public formGroup: FormGroup
 
   {{#each (filters table.tablename)}}
   {{#if (isTemplate this.field this.label (datatype this.fieldData.type) 'comp-init')}}
@@ -57,7 +57,7 @@ export class {{get 'nome'}}ListarComponent implements OnInit {
     private filtrar: Filtrar{{get 'nome'}}GQL,
     private criarAlterar: CriarAlterar{{get 'nome'}}GQL
   ) {
-    this.filterForm = this.formBuilder.group({
+    this.formGroup = this.formBuilder.group({
       {{#each (filters table.tablename)}}
       {{this.field}}: [undefined],
       {{/each}}
@@ -66,7 +66,7 @@ export class {{get 'nome'}}ListarComponent implements OnInit {
 
   ngOnInit() {
     this.buildColumns()
-    this.filterForm.valueChanges.subscribe((value) => {
+    this.formGroup.valueChanges.subscribe((value) => {
       {{#each (filters table.tablename)}}
       this.dt.filter(value.{{this.field}}, '{{this.field}}', '{{this.matchMode}}')
       {{/each}}

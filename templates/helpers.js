@@ -12,7 +12,7 @@ module.exports = (Handlebars) => {
     }
     else if (_attr.match(/^(smallint|mediumint|tinyint|int)/)) {
       var length = _attr.match(/\(\d+\)/);
-      val = 'INTEGER' + (length ? length : '');
+      val = 'INTEGER'/* + (length ? length : '')*/;
 
       var unsigned = _attr.match(/unsigned/i);
       if (unsigned) val += '.UNSIGNED'
@@ -102,7 +102,10 @@ module.exports = (Handlebars) => {
       m += 'number';
     } else if (val.indexOf('DOUBLE') > -1) {
       m += 'number';
-    } else if (val.indexOf('UUIDV4') > -1) {
+    } 
+    else if (val.indexOf('TIME') > -1) {
+      m += 'string';
+    }else if (val.indexOf('UUIDV4') > -1) {
       m += 'string';
     } else {
       m += 'any';
@@ -124,7 +127,10 @@ module.exports = (Handlebars) => {
       m += 'PrimeFilterItemInt';
     } else if (val.indexOf('STRING') > -1) {
       m += 'PrimeFilterItemString';
-    } else if (val.indexOf('CHAR') > -1) {
+    } 
+    else if (val.indexOf('TIME') > -1) {
+      m += 'PrimeFilterItemString';
+    }else if (val.indexOf('CHAR') > -1) {
       m += 'PrimeFilterItemString';
     } else if (val.indexOf('REAL') > -1) {
       m += 'PrimeFilterItemFloat';
@@ -152,6 +158,8 @@ module.exports = (Handlebars) => {
 
     if (val === undefined) {
       m += '';
+    } else if (val.indexOf('UNSIGNED') > -1) {
+      m += 'Int';
     } else if (val.indexOf('BOOLEAN') > -1) {
       m += '';
     } else if (val.indexOf('INTEGER') > -1) {
@@ -172,7 +180,7 @@ module.exports = (Handlebars) => {
       m += 'Float';
     } else if (val.indexOf('DECIMAL') > -1) {
       m += 'Float';
-    } else if (val.indexOf('DOUBLE') > -1) {
+    }else if (val.indexOf('DOUBLE') > -1) {
       m += 'Float';
     } else if (val.indexOf('UUIDV4') > -1) {
       m += '';
@@ -197,6 +205,15 @@ module.exports = (Handlebars) => {
     const conf = b.data.root.data[tableName];
     if (conf) {
       return conf.filterBy.findIndex((el) => el === field) !== -1;
+    } else {
+      return false;
+    }
+  });
+
+  Handlebars.registerHelper('containsFilter', function (tableName, b) {
+    const conf = b.data.root.data[tableName];
+    if (conf) {
+      return true;
     } else {
       return false;
     }

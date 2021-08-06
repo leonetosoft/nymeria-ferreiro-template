@@ -125,7 +125,7 @@ module.exports = (Handlebars) => {
 
       componentInit = `lnBuscarCbo = this.buscaCbo.buscarCbo`;
     } else if (field === 'ativo') {
-      templateHtml = `<p-checkbox [formControl]="formGroup.controls['ativo']" binary="true" label="Ativo"></p-checkbox>`;
+      templateHtml = `<p-checkbox [formControl]="formGroup.controls['ativo']" binary="true" label="Cadastro Ativo"></p-checkbox>`;
     } else if (fieldType.indexOf('DATE') > -1 || fieldType.indexOf('DATEONLY') > -1) {
       templateHtml = `
             <label>${label}:</label>

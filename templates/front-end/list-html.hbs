@@ -2,13 +2,17 @@
 #begin_file
 {{fileName (replace this.tablename '_' '-') '/' (replace this.tablename '_' '-') '-list' '/' (replace this.tablename '_' '-') '-listar.component.html'}}
 <div class="animated fadeIn">
-    <div [formGroup]="filterForm">
+    <div [formGroup]="formGroup">
         <div class="ui-g ui-fluid no-pad">
             {{#each (filters table.tablename)}}
             <div class="ui-g-3 ui-md-3 ui-sm-12">
                 {{getInput this.field this.label (datatype this.fieldData.type) 'html'}}
             </div>
             {{/each}}
+            <div class="ui-g-1 ui-md-1 ui-sm-12">
+              <button style="width: 100px; float: right; margin-top: 18px;" icon="pi pi-plus" pButton type="button"
+              label="Novo" [routerLink]="['criar']"></button>
+            </div>
         </div>
     </div>
     <p-table #dt [totalRecords]="totalDados" [responsive]="true" sortField="id" sortOrder="1" [value]="dados|flatten"
@@ -16,7 +20,7 @@
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th *ngFor="let col of columns" [style.width.px]="col.w">
-          {{col.header}}
+          {{{{raw-helper}}}}{{col.header}}{{{{/raw-helper}}}}
         </th>
       </tr>
     </ng-template>
@@ -24,7 +28,7 @@
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
       <tr>
         <td *ngFor="let col of columns" [ngClass]="{'center': col.center }">
-          <span class="ui-column-title" style="width: 50%">{{col.header}}</span>
+          <span class="ui-column-title" style="width: 50%">{{{{raw-helper}}}}{{col.header}}{{{{/raw-helper}}}}</span>
           <ng-container [ngSwitch]="col.field">
 
             <ng-container *ngSwitchCase="'acao'">

@@ -1,0 +1,61 @@
+{{#each this.tableData as |table index|}}
+#begin_file
+{{fileName (replace this.tablename '_' '-') '/' (replace this.tablename '_' '-') '-list' '/' (replace this.tablename '_' '-') '-listar.component.html'}}
+<div class="card animate__animated animate__fadeIn">
+    <div [formGroup]="formGroup">
+        <div class="p-grid p-fluid">
+            {{#each (filters table.tablename)}}
+            <div class="p-lg-2">
+                {{getInput this.field this.label (datatype this.fieldData.type) 'html'}}
+            </div>
+            {{/each}}
+            <div class="p-lg-2 p-lg-offset-6 p-col-12 p-col-offset-0">
+              <button style="width: 100px; float: right; margin-top: 18px;" icon="pi pi-plus" pButton type="button"
+              label="Novo" [routerLink]="['criar']"></button>
+            </div>
+        </div>
+    </div>
+    <p-table #dt [totalRecords]="totalDados" [responsive]="true" sortField="id" sortOrder="1" [value]="dados|flatten"
+    [columns]="columns" [styleClass]="'p-datatable-gridlines'" [loading]="loading" [lazy]="true" (onLazyLoad)="load($event)" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" [style.width.px]="col.w">
+          {{{{raw-helper}}}}{{col.header}}{{{{/raw-helper}}}}
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+      <tr>
+        <td *ngFor="let col of columns" [ngClass]="{'center': col.center }">
+          <span class="ui-column-title" style="width: 50%">{{{{raw-helper}}}}{{col.header}}{{{{/raw-helper}}}}</span>
+          <ng-container [ngSwitch]="col.field">
+
+            <ng-container *ngSwitchCase="'acao'">
+              <button pButton title="Editar" icon="pi pi-pencil" (click)="editar(rowData['id'])">
+              </button>
+              <button pButton class="p-button-danger" title="Excluir" icon="fa fa-trash"
+                (click)="excluir(rowData['id'])">
+              </button>
+            </ng-container>
+
+            {{#each (listIt table.tablename)}}
+            {{#if (withPipe (datatype this.fieldData.type))}}
+            <ng-container *ngSwitchCase="'{{this.field}}'">
+              {{addPipe (datatype this.fieldData.type)}}
+            </ng-container>
+            
+            {{/if}}
+            {{/each}}
+            <ng-container *ngSwitchDefault>
+              {{{{raw-helper}}}}{{rowData[col.field]}}{{{{/raw-helper}}}}
+            </ng-container>
+
+          </ng-container>
+        </td>
+      </tr>
+    </ng-template>
+    </p-table>
+</div>{{#if (useModal this.tablename)}}
+<router-outlet></router-outlet>{{/if}}
+{{/each}}

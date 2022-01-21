@@ -1,0 +1,8 @@
+#begin_file
+{{fileName 'perms' '.sql'}}
+{{#each this.tableData}}
+INSERT INTO permissao (descricao,categoria,ativo) VALUES ('Cadastrar','{{camelcase this.tablename true}}',1);
+INSERT INTO permissao (descricao,categoria,ativo) VALUES ('Editar','{{camelcase this.tablename true}}',1);
+INSERT INTO permissao (descricao,categoria,ativo) VALUES ('Excluir','{{camelcase this.tablename true}}',1);
+INSERT INTO permissao (descricao,categoria,ativo) VALUES ('Visualizar','{{camelcase this.tablename true}}',1);
+{{/each}}

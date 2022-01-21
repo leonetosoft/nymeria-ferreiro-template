@@ -1,0 +1,33 @@
+{{#each this.tableData as |table index|}}
+#begin_file
+{{fileName '' (camelcase this.tablename true) 'Def.ts'}}
+{{set 'nome' (camelcase this.tablename true)}}
+import {{get 'nome'}} from '../models/{{get 'nome'}}';
+{{#if (containsFilter table.tablename)}}
+@{{import 'InputType'}}("{{get 'nome'}}FilterInput")
+export class {{get 'nome'}}FilterInput {
+ {{#each table.fields}}
+ {{#if (isFilter table.tablename this.name)}}
+    @{{import 'Field'}}(type => {{import (primeFilter (datatype this.type))}}, { nullable: true })
+    {{this.name}}: {{import (primeFilter (datatype this.type))}};
+    
+ {{/if}}
+ {{/each}}
+}
+
+@{{import 'InputType'}}("{{get 'nome'}}ListInput")
+export class {{get 'nome'}}ListInput extends {{import 'PrimeDataTableRequest'}}({{get 'nome'}}FilterInput) implements {{import 'IPrimeDataTableRequest'}}<{{get 'nome'}}FilterInput> { }
+{{/if}}
+
+@{{import 'ObjectType'}}("{{get 'nome'}}DataTable")
+export class {{get 'nome'}}DataTable extends {{import 'PrimeDataTableResponse'}}({{get 'nome'}}) { }
+
+@{{import 'InputType'}}("{{get 'nome'}}Input")
+export class {{get 'nome'}}Input {
+ {{#each table.fields}}
+    @{{import 'Field'}}({{#if (isGqlType this.type)}}type => {{import (gqlType this.type)}}, {{/if}}{ nullable: true })
+    {{this.name}}: {{memberDef (datatype this.type)}};
+
+ {{/each}}
+}
+{{/each}}

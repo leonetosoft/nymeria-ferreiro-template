@@ -1,0 +1,302 @@
+{
+    "imports": {
+        "sequelize-typescript": [
+            "Table",
+            "Model",
+            "PrimaryKey",
+            "Column",
+            "DataType",
+            "AutoIncrement",
+            "Default",
+            "Comment",
+            "ForeignKey",
+            "BelongsTo"
+        ],
+        "../util/primeng/CrudUtils": [
+            "CrudUtils"
+        ],
+        "sequelize": [
+            "Op",
+            "Transaction"
+        ],
+        "../security/token": [
+            "SessionToken"
+        ],
+        "../config/env": [
+            "Env"
+        ],
+        "../util/primeng/DataTable": [
+            "IPrimeDataTableRequest",
+            "PrimeDataTableResponse",
+            "PrimeDataTableRequest",
+            "PrimeFilterItemString",
+            "PrimeFilterItemInt"
+        ],
+        "type-graphql": [
+            "ObjectType",
+            "Field",
+            "Int",
+            "Resolver",
+            "Query",
+            "Arg",
+            "Ctx",
+            "Mutation",
+            "Authorized",
+            "UseMiddleware",
+            "InputType",
+            "Float"
+        ],
+        "../util/permissoes/perm.enum": [
+            "PERM"
+        ],
+        "../middleware/valida.perm.middle": [
+            "CheckPerm",
+            "BuildPerm"
+        ],
+        "../util/context.interface": [
+            "ContextInterface"
+        ],
+        "typedi": [
+            "Service"
+        ]
+    },
+    "data": {
+        "variedade": {
+            "modal": false,
+            "filterBy": [
+                "descricao",
+                "ativo"
+            ],
+            "filters": [
+                {
+                    "field": "descricao",
+                    "label": "Descrição",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "descricao",
+                    "header": "Descrição",
+                    "center": false
+                },
+                {
+                    "field": "preco_kg",
+                    "header": "PREÇO KG",
+                    "center": false,
+                    "width": 100
+                }
+            ]
+        },
+        "produtor": {
+            "modal": false,
+            "filterBy": [
+                "nome",
+                "cpf_cnpj",
+                "data_cadastro",
+                "ativo"
+            ],
+            "filters": [
+                {
+                    "field": "nome",
+                    "label": "Nome",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "cpf_cnpj",
+                    "label": "CPF/CNPJ",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "data_cadastro",
+                    "label": "Data de Cadastro",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "nome",
+                    "header": "Nome",
+                    "center": false
+                },
+                {
+                    "field": "cpf_cnpj",
+                    "header": "CPF/CNPJ",
+                    "center": false
+                },
+                {
+                    "field": "data_cadastro",
+                    "header": "Cadastro",
+                    "center": true,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                }
+            ]
+        },
+        "safra": {
+            "modal": false,
+            "filterBy": [
+                "descricao",
+                "ativo"
+            ],
+            "filters": [
+                {
+                    "field": "descricao",
+                    "label": "Descrição",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "descricao",
+                    "header": "Descrição",
+                    "center": false
+                }
+            ]
+        },
+        "propriedade": {
+            "modal": false,
+            "filterBy": [
+                "produtor_id",
+                "nome",
+                "cidade_id",
+                "tipo",
+                "ativo"
+            ],
+            "filters": [
+                {
+                    "field": "nome",
+                    "label": "Nome",
+                    "matchMode": "lk"
+                },
+                {
+                    "field": "produtor_id",
+                    "label": "Produtor",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "cidade_id",
+                    "label": "Cidade",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "tipo",
+                    "label": "Tipo",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "nome",
+                    "header": "Nome",
+                    "center": false
+                },
+                {
+                    "field": "produtor_id",
+                    "header": "Produtor",
+                    "center": false
+                },
+                {
+                    "field": "cidade_id",
+                    "header": "Cidade",
+                    "center": false
+                },
+                {
+                    "field": "tipo",
+                    "header": "Tipo",
+                    "center": false
+                }
+            ]
+        },
+        "contrato": {
+            "modal": false,
+            "filterBy": [
+                "produtor_id",
+                "propriedade_id",
+                "variedade_id",
+                "safra_id",
+                "data_colheita",
+                "ativo"
+            ],
+            "filters": [
+                {
+                    "field": "produtor_id",
+                    "label": "Produtor",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "propriedade_id",
+                    "label": "Propriedade",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "variedade_id",
+                    "label": "Variedade",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "safra_id",
+                    "label": "Safra",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "data_colheita",
+                    "label": "Data da Colheita",
+                    "matchMode": "gt"
+                },
+                {
+                    "field": "ativo",
+                    "label": "Ativo",
+                    "matchMode": "gt"
+                }
+            ],
+            "list": [
+                {
+                    "field": "produtor_id",
+                    "header": "Produtor",
+                    "center": false
+                },
+                {
+                    "field": "propriedade_id",
+                    "header": "Propriedade",
+                    "center": false
+                },
+                {
+                    "field": "variedade_id",
+                    "header": "Variedade",
+                    "center": false
+                },
+                {
+                    "field": "safra_id",
+                    "header": "Safra",
+                    "center": false
+                },
+                {
+                    "field": "data_colheita",
+                    "header": "Dta. Colheita",
+                    "center": true,
+                    "pipe": "datex: 'DD/MM/YYYY'"
+                }
+            ]
+        }
+    }
+}

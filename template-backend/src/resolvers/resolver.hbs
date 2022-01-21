@@ -1,0 +1,40 @@
+{{#each this.tableData}}
+#begin_file
+{{fileName '' (camelcase this.tablename true) '/' (camelcase this.tablename true) 'Resolver.ts'}}
+{{set 'nome' (camelcase this.tablename true)}}
+import { {{get 'nome'}}DataTable, {{get 'nome'}}ListInput, {{get 'nome'}}Input } from '../interfaces/{{get 'nome'}}Def';
+import {{get 'nome'}} from '../models/{{get 'nome'}}';
+import { {{get 'nome'}}Service } from "../services/{{get 'nome'}}Service";
+
+@{{import 'Service'}}()
+@{{import 'Resolver'}}(of => {{get 'nome'}})
+export default class {{get 'nome'}}Resolver {
+  {{set 'service' (camelcase this.tablename) 'Service'}}
+  constructor(private {{get 'service'}}: {{get 'nome'}}Service) { }
+  {{#if (containsFilter this.tablename)}}
+  @{{import 'Authorized'}}()
+  @{{import 'UseMiddleware'}}({{import 'CheckPerm'}}([{{import 'PERM'}}.{{get 'nome'}}.Visualizar]))
+  @{{import 'Query'}}(returns => {{get 'nome'}}DataTable, { nullable: true })
+  async filtrar{{get 'nome'}}(@Arg('filter') filter: {{get 'nome'}}ListInput, @Ctx() ctx: ContextInterface): Promise<{{get 'nome'}}DataTable> {
+    return this.{{get 'service'}}.filtrar(filter, ctx.usuario)
+  }
+  {{/if}}
+  @Authorized()
+  @UseMiddleware(CheckPerm([PERM.{{get 'nome'}}.Visualizar]))
+  @Query(returns => {{get 'nome'}}, { nullable: true })
+  buscar{{get 'nome'}}PorId(@Arg('id', type => Int) id: number, @Ctx() ctx: ContextInterface): {{get 'nome'}} {
+    return this.{{get 'service'}}.porId(id, ctx.usuario)
+  }
+
+  @Authorized()
+  @UseMiddleware(CheckPerm([...{{import 'BuildPerm'}}({
+    isInsert: PERM.{{get 'nome'}}.Cadastrar,
+    isUpdate: PERM.{{get 'nome'}}.Editar,
+    isDelete: PERM.{{get 'nome'}}.Excluir
+  })]))
+  @{{import 'Mutation'}}(returns => {{get 'nome'}}, { nullable: true })
+  criarAlterar{{get 'nome'}}(@Arg('data') data: {{get 'nome'}}Input, @Ctx() ctx: ContextInterface) {
+    return this.{{get 'service'}}.criarAlterar(data, ctx.usuario)
+  }
+}
+{{/each}}

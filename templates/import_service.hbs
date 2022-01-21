@@ -1,8 +1,5 @@
 #begin_file
 {{fileName 'ImportsService' '.txt'}}
 {{#each this.tableData}}
-{{camelcase this.tablename true}}, Campos:
-{{#each this.fields}}
-{{this.name}}
-{{/each}}
+{{camelcase this.tablename true}}
 {{/each}}

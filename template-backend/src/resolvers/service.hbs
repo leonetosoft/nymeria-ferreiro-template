@@ -1,0 +1,46 @@
+{{#each this.tableData}}
+#begin_file
+{{fileName '' (camelcase this.tablename true) '/' (camelcase this.tablename true) 'Service.ts'}}
+{{set 'nome' (camelcase this.tablename true)}}
+import { {{get 'nome'}}FilterInput, {{get 'nome'}}Input } from '../interfaces/{{get 'nome'}}Def';
+
+@{{import 'Service'}}()
+export class {{get 'nome'}}Service {
+
+  filtrar(input: {{import 'IPrimeDataTableRequest'}}<{{import (get 'nome')}}FilterInput>) {
+    return {{get 'nome'}}.findAndCountAll<{{get 'nome'}}>({
+      limit: input.rows,
+      offset: input.first,
+      order: {{import 'CrudUtils'}}.getOrder(input),
+      where: {{import 'CrudUtils'}}.processFilters(input.filters, {})
+    })
+  }
+
+  porId(id: number) {
+    return {{get 'nome'}}.findByPk(id)
+  }
+
+  async criarAlterar(data: {{get 'nome'}}Input, usuario: {{import 'SessionToken'}}, trans = undefined) {
+    let t: {{import 'Transaction'}} = trans ? trans : await {{import 'sequelize'}}.transaction();
+    try {
+      let {{this.tablename}} = await {{get 'nome'}}.findByPk<{{get 'nome'}}>(data.id)
+
+      if ({{this.tablename}}) {
+        {{this.tablename}}.setAttributes({ ...data, {{#each this.fields}}{{#if (ifequal this.name 'alteracao_usuario_id')}}alteracao_usuario_id: usuario.id, {{/if}}{{#if (ifequal this.name 'data_alteracao')}}data_alteracao: new Date(), {{/if}}{{/each}} })
+      } else {
+        {{this.tablename}} = await {{get 'nome'}}.build({ ...data, {{#each this.fields}}{{#if (ifequal this.name 'criacao_usuario_id')}}criacao_usuario_id: usuario.id,{{/if}}{{#if (ifequal this.name 'data_cadastro')}}data_cadastro: new Date(),{{/if}}{{/each}} })
+      }
+      await {{this.tablename}}.save({ transaction: t })
+
+      if (!trans)
+        await t?.commit()
+      return {{this.tablename}}
+    } catch (error) {
+      if (!trans)
+        await t?.rollback()
+      throw error;
+    }
+
+  }
+}
+{{/each}} 

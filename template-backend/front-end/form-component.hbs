@@ -1,0 +1,118 @@
+{{#each this.tableData as |table index|}}
+#begin_file
+{{fileName (replace this.tablename '_' '-') '/' (replace this.tablename '_' '-') '-form' '/' (replace this.tablename '_' '-') '-form.component.ts'}}
+{{set 'nome' (camelcase this.tablename true)}}
+{{set 'replaced' (replace this.tablename '_' '-')}}
+import { finalize } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { AlertService } from 'src/app/services/util/alert.service';
+import { Buscar{{get 'nome'}}PorIdGQL, CriarAlterar{{get 'nome'}}GQL } from 'src/app/generated/graphql';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { FormService } from 'src/app/services/util/form.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';{{#if (useModal this.tablename)}}
+import { EventPubSubService } from 'src/app/services/events/events.pub.sub.service';{{/if}}
+{{#each this.fields}}
+{{#if (isTemplate this.name (camelcase this.name) (datatype this.type) 'imports')}} 
+{{getInput this.name (camelcase this.name) (datatype this.type) 'imports'}}
+{{/if}}
+{{/each}}
+
+@Component({
+  selector: 'app-{{get 'replaced'}}-form',
+  templateUrl: './{{get 'replaced'}}-form.component.html',
+  styleUrls: ['./{{get 'replaced'}}-form.component.css']
+})
+export class {{get 'nome'}}FormComponent implements OnInit {
+  public formGroup: FormGroup
+  {{#if (useModal this.tablename)}}
+  public display = true
+  {{/if}}
+  editing = false
+  id: number
+  salvando = false;
+
+  {{#each this.fields}}
+  {{#if (isTemplate this.name (camelcase this.name) (datatype this.type) 'comp-init')}}
+  {{getInput this.name (camelcase this.name) (datatype this.type) 'comp-init'}}
+  {{/if}}
+  {{/each}}
+
+  constructor(
+    private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private alertService: AlertService,
+    private formService: FormService,
+    private location: Location,
+    {{#each this.fields}}
+    {{#if (isTemplate this.name (camelcase this.name) (datatype this.type) 'comp-constructor')}}
+    {{getInput this.name (camelcase this.name) (datatype this.type) 'comp-constructor'}},
+    {{/if}}
+    {{/each}}
+    private buscarPoId: Buscar{{get 'nome'}}PorIdGQL,{{#if (useModal this.tablename)}}
+    private eventPs: EventPubSubService,{{/if}}
+    private criarAlterar: CriarAlterar{{get 'nome'}}GQL
+  ) {
+    this.formGroup = formBuilder.group({
+      {{#each this.fields}}
+      {{this.name}}: [undefined],
+      {{/each}}
+    });
+  }
+
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.id = Number(params['id'])
+        this.carregar(this.id)
+        this.editing = true
+      }
+    });
+  }
+
+  carregar(id) {
+    this.buscarPoId.fetch({
+      id: id
+    }).subscribe(rs => {
+      this.formGroup.patchValue({
+        ...rs.data.buscar{{get 'nome'}}PorId,
+        ...this.formService.parseStrToBool(rs.data.buscar{{get 'nome'}}PorId)
+      })
+    }, err => {
+     this.alertService.showGQLError(err);
+    })
+  }
+
+  submit() {
+    let values = this.formService.getDirtyValues(this.formGroup);
+
+    if (this.formGroup.valid) {
+      if (values.isChanged) {
+        this.salvando = true;
+        this.criarAlterar.mutate({
+          data: { ...values.changes, ...this.formService.parseBoolToStr(values.changes) }
+        }).pipe(finalize(() => {
+          this.salvando = false;
+        })).subscribe(rs => {
+          this.close();
+          this.formService.markPristine(this.formGroup);
+           this.alertService.showSuccess('Salvo com sucesso!')
+          {{#if (useModal this.tablename)}}
+          this.eventPs.addEvent('ATUALIZA_{{upper this.tablename}}');
+          {{/if}}
+        }, err => {
+          this.alertService.showGQLError(err);
+        });
+      } else {
+        this.alertService.showWarn(`Não foram feitas alterações`, 'Salvar');
+      }
+    }
+  }
+
+  public close() {
+    this.location.back();
+    return false;
+  }
+}
+
+{{/each}}
